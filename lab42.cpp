@@ -8,22 +8,34 @@ using namespace std;
 ofstream archivo;
 #define pi 3.141592654
 #define ep 2.718281828
+#define n 4
 
 /*int** escalonado(int **A,int n){
-
 }*/
-/*void imprimir(int &A[][],int n){
-	for(i=0;i<n;i++){
+void imprimir(double A[n][n+1]){
+	for(int i=0;i<n;i++){
 		for(int j=0;j<n;j++){
 			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
 		}
 		cout<<endl;
 	}
+}
+/*void llenar(double &A[n][n+1]){
+    int i,a;
+	for(i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			cout<<i<<";"<<j<<": ";
+			cin>>a;
+			A[i][j]=a;
+		}
+		cout<<endl;
+	}
 }*/
-int main(){
-	double z;int n=2;
-	double A[n][n+1];
+
+void metGaussPiv(double A[n][n+1]){
+	double z;
 	int a;
+	double x[n];
 	//Llenado de la matriz
 	int i;
 	for(i=0;i<n;i++){
@@ -35,12 +47,7 @@ int main(){
 		cout<<endl;
 	}
 	//imprimir
-	for(i=0;i<n;i++){
-		for(int j=0;j<n+1;j++){
-			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
-		}
-		cout<<endl;
-	}
+	imprimir(A);
 	//Escalonado
 	for(int j=0;j<=n;j++){
 		for(i=0;i<=n-1;i++){
@@ -48,26 +55,28 @@ int main(){
 				z=A[i][j]/A[j][j];
 				cout<<"Z: "<<z<<endl;
 				for(int k=0;k<=n;k++)
-					A[i][k]=A[i][k]-z*A[j][k];
-				
+					A[i][k]=int(A[i][k]-z*A[j][k]);
+
 			}
 		}
 	}
 	//imprimir
-	for(i=0;i<n;i++){
-		for(int j=0;j<n+1;j++){
-			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
-		}
-		cout<<endl;
-	}
+	imprimir(A);
 	//sustitucion regresiva
-	/*for(i=n;i>-1;i--){
+	for(i=n-1;i>=0;i--){
 		a=0;
-		for(k=i+1;k<n){
-			a=a+A[i][k]*x(k);
+		for(int k=i+1;k<=n-1;k++){
+			a=a+A[i][k]*x[k];
 		}
-		x[]
-	}*/
-	
+		x[i]=(A[i][n]-a)/A[i][i];
+	}
+	//imprimir var
+	for(i=0;i<=n-1;i++)
+        cout<<i+1<<" : "<<x[i]<<endl;
+}
+int main(){
+    double A[n][n+1];
+    metGaussPiv(A);
 
+    return 0;
 }
