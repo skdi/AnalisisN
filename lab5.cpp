@@ -9,91 +9,40 @@ ofstream archivo;
 #define pi 3.141592654
 #define ep 2.718281828
 #define n 4
-double A[n][n+1];
-double L[n][n+1];
-double U[n][n+1];
+double A[n][n];
+double L[n][n];
+double U[n][n];
+double b[n];
 double x[n];
 double y[n];
-/*int** escalonado(int **A,int n){
-}*/
-void imprimir(double A[n][n+1]){
-	for(int i=0;i<n;i++){
-		for(int j=0;j<n;j++){
-			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
-		}
-		cout<<endl;
-	}
-}
 void imprimir(double A[n][n]){
 	for(int i=0;i<n;i++){
 		for(int j=0;j<n;j++){
 			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
 		}
-		cout<<endl;
+		cout<<i<<": ";
+		cout<<b[i]<<endl;
+		//cout<<endl;
 	}
 }
 
-void llenar_matriz(double A[n][n+1]){
+void llenar_matriz(double A[n][n],double b[n]){
     int i;
     int a;
 	for(i=0;i<n;i++){
-		for(int j=0;j<n+1;j++){
+		for(int j=0;j<n;j++){
 			cout<<i<<";"<<j<<": ";
 			cin>>a;
 			A[i][j]=a;
 		}
+		cout<<i<<": ";
+		cin>>a;
+		b[i]=a;
 		cout<<endl;
 	}
-}
-void escalona(double A[n][n+1]){
-    int i;double z;
-    for(int j=0;j<=n;j++){
-		for(i=0;i<=n-1;i++){
-			if(i>j){
-				z=A[i][j]/A[j][j];
-				cout<<"Z: "<<z<<endl;
-				for(int k=0;k<=n;k++)
-					A[i][k]=int(A[i][k]-z*A[j][k]);
 
-			}
-		}
-	}
 }
-
-void identidad(double A[n][n+1]){
-    int i;
-	for(i=0;i<n;i++){
-		for(int j=0;j<n+1;j++){
-            A[i][j]=0;
-		}
-		cout<<endl;
-	}
-    for(i=0;i<n;i++){
-		for(int j=0;j<n+1;j++){
-            A[i][i]=1;
-		}
-		cout<<endl;
-	}
-}
-void copia(double U[n][n+1],double A[n][n+1]){
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n+1;j++){
-            U[i][j]=A[i][j];
-        }
-    }
-}
-void susti_progresiva(double L[n][n+1]){
-    int s=0;
-    for(int i=0;i<n;i++){
-        s=0;
-        for(int k=0;k<i-1;k++){
-            s=s+A[i][k]*y[k];
-        }
-        y[i]=(A[i][n]-s)/L[i][i];
-    }
-}
-
-void llenarLU(){
+void llenarLU(double L[n][n],double U[n][n]){
     int i,j;
     for(i=0;i<n;i++){
         for(j=0;j<n;j++)
@@ -107,7 +56,7 @@ void llenarLU(){
             }
     }
 }
-void descomp_LU(double A[n][n+1]){
+void descomp_LU(double A[n][n]){
     int i,j,k,sum;
     for(i=0;i<n;i++){
         for(j=0;j<n;j++){
@@ -133,50 +82,86 @@ void descomp_LU(double A[n][n+1]){
     }
 
 }
-void susti_regresiva(double A[n][n+1]){
+void susti_regresiva(double A[n][n],double y[n]){
     int i,a;
-    	double x[n];
     for(i=n-1;i>=0;i--){
 		a=0;
 		for(int k=i+1;k<=n-1;k++){
 			a=a+A[i][k]*x[k];
 		}
-		x[i]=(A[i][n]-a)/A[i][i];
+		x[i]=(y[i]-a)/A[i][i];
 	}
 	//imprimir var
 	for(i=0;i<=n-1;i++)
         cout<<i+1<<" : "<<x[i]<<endl;
 }
-
-void metDescompLU(double A[n][n+1]){
-    llenarLU();
-    llenar_matriz(A);
-    descomp_LU(A);
-    imprimir(L);
-    imprimir(U);
-    susti_progresiva(L);
-    susti_regresiva(U);
-
+void susti_progresiva(double L[n][n],double b[n]){
+    int s=0;
+    for(int i=0;i<n;i++){
+        s=0;
+        for(int k=0;k<i-1;k++){
+            s=s+L[i][k]*y[k];
+        }
+        y[i]=(b[i]-s)/L[i][i];
+    }
+    //imprimir var
+	for(int i=0;i<=n-1;i++)
+        cout<<i+1<<" : "<<y[i]<<endl;
 }
 
-void metGaussPiv(double A[n][n+1]){
-    //Llenado de la matriz
-    llenar_matriz(A);
-	//imprimir
-	imprimir(A);
-	//Escalonado
-	escalona(A);
-	//imprimir
-	imprimir(A);
-	//sustitucion regresiva
-	susti_regresiva(A);
+bool desc(double A[n][n]){
+	bool a=1;
+	for(int i=0;i<n;i++){
+
+            	if(A[i][i]==0){
+        			a=0;
+			}  
+
+    }
+    return a;
+
+}
+void multiplicacion(double A[n][n],double B[n][n]){
+	double C[n][n];
+	for (int i=0;i<n;i++){
+		for (int j=0;j<n;j++){
+			 C[i][j]=0;
+	         for(int k=0;k<n;k++){
+	          C[i][j]=C[i][j]+A[i][k]*B[k][j];
+	          }
+	          cout<<"("<<i<<";"<<j<<"): "<<C[i][j]<<" ";
+	       }
+	       cout<<endl;
+
+    }
+
+}
+void ResuelveSistConLU(double A[n][n],double b[n],double L[n][n],double U[n][n]){
+    llenarLU(L,U);
+    llenar_matriz(A,b);
+    if(desc(A)){
+    	cout<<"MATRIZ A"<<endl;
+	    imprimir(A);
+	    descomp_LU(A);
+	    cout<<"MATRIZ L"<<endl;
+	    imprimir(L);
+	    cout<<"MATRIZ U"<<endl;
+	    imprimir(U);
+	    susti_progresiva(L,b);
+	    susti_regresiva(U,y);
+	    cout<<"multiplicacion LU"<<endl;
+	    multiplicacion(L,U);
+    }
+    else
+    	cout<<"no tiene descomposicion LU"<<endl;
+
+
+
+
 
 }
 int main(){
-    //double A[n][n+1];
-    //metGaussPiv(A);
-    metDescompLU(A);
+	ResuelveSistConLU(A,b,L,U);
 
-
-    return 0;
+	return 0;
 }
