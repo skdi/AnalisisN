@@ -20,7 +20,7 @@ void imprimir(double A[n][n]){
 		for(int j=0;j<n;j++){
 			cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
 		}
-		cout<<i<<": ";
+		cout<<"B: "<<i<<": ";
 		cout<<b[i]<<endl;
 		//cout<<endl;
 	}
@@ -91,7 +91,7 @@ void susti_regresiva(double A[n][n],double y[n]){
 		}
 		x[i]=(y[i]-a)/A[i][i];
 	}
-	//imprimir var
+	cout<<"Respuesta en X"<<endl;
 	for(i=0;i<=n-1;i++)
         cout<<i+1<<" : "<<x[i]<<endl;
 }
@@ -104,12 +104,12 @@ void susti_progresiva(double L[n][n],double b[n]){
         }
         y[i]=(b[i]-s)/L[i][i];
     }
-    //imprimir var
+    cout<<"Respuesta en Y"<<endl;
 	for(int i=0;i<=n-1;i++)
         cout<<i+1<<" : "<<y[i]<<endl;
 }
 
-bool desc(double A[n][n]){
+bool desc(double U[n][n]){
 	bool a=1;
 	for(int i=0;i<n;i++){
 
@@ -139,10 +139,10 @@ void multiplicacion(double A[n][n],double B[n][n]){
 void ResuelveSistConLU(double A[n][n],double b[n],double L[n][n],double U[n][n]){
     llenarLU(L,U);
     llenar_matriz(A,b);
-    if(desc(A)){
-    	cout<<"MATRIZ A"<<endl;
-	    imprimir(A);
-	    descomp_LU(A);
+    cout<<"MATRIZ A"<<endl;
+	imprimir(A);
+	descomp_LU(A);
+    if(desc(U)){
 	    cout<<"MATRIZ L"<<endl;
 	    imprimir(L);
 	    cout<<"MATRIZ U"<<endl;
