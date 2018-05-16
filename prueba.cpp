@@ -621,14 +621,99 @@ float suma_jacobi(float Matriz[], float vector[], int componente)
 }
 
 /*Gauss seidel*/
+int main_gauss_seidel(){
+    int dim,i,j,k,flag=0;int count,l,e;
+    double y,temp,temp2;    float error,epsilon;
+    cout<<"Dimension de la matriz A: ";
+    cin>>dim;
+    float A[dim][dim],b[dim],x[dim],x_prev[dim],aux[dim];
 
+    cout<<endl<<" Elementos de la matriz A: "<<endl;
+    for(i=0;i<dim;i++) for(j=0;j<dim;j++){
+        cout<<"A("<<i<<","<<j<<")"; cin>>A[i][j]; cout<<endl;
+    }
+
+    cout<<" Elementos del vector b: "<<endl;
+    for(i=0;i<dim;i++){
+        cout<<"b("<<i<<")="; cin>>b[i];
+    }
+
+    cout<<"\n Error de parada: \n";
+    cout<<"E= "; cin>>epsilon;
+    error=epsilon+1;
+
+    //cominezo algoritmo de Jacobi
+    //Error se mide como la norma del vector diferenceia entre la iteracion i e i+1
+    cout<<"\n Valor inicial de la iteracion: "<<endl;
+    for(i=0;i<dim;i++){
+        cout<<"x0("<<i<<")="; cin>>x[i];
+    }
+    for(i=0;i<dim;i++){
+        for(j=0;j<dim;j++){
+            cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
+        }
+        cout<<"B: "<<i<<": ";
+        cout<<b[i];
+        cout<<" X: "<<i<<": ";
+        cout<<x[i]<<endl;
+    }
+    //diagonalizar la matriz
+    for(i=0;i<dim;i++){
+        for(k=i+1;k<dim;k++){
+            if(abs(A[i][i])<abs(A[k][i])){
+                for(j=0;j<dim;j++){
+                    temp=A[i][j];
+                    A[i][j]=A[k][j];
+                    A[k][j]=temp;
+                    temp2=b[i];
+                    b[i]=b[k];
+                    b[k]=temp2;
+                }
+            }
+        }
+    }
+    cout<<"A diagonalizada: ";
+    for(i=0;i<dim;i++){
+        for(j=0;j<dim;j++){
+            cout<<"("<<i<<";"<<j<<"): "<<A[i][j]<<" ";
+        }
+        cout<<"B: "<<i<<": ";
+        cout<<b[i];
+    }
+
+    cout<<"iteracion N:";
+    for(i=0;i<dim;i++)
+        cout<<"x "<<i+1<<endl;
+    do{
+        cout<<count+1;
+        for(i=0;i<dim;i++){
+            y=x[i];
+            x[i]=A[i][dim];
+            for(j=0;j<dim;j++){
+                if(j!=i)
+                    x[i]=x[i]-A[i][j]*x[j];
+            }
+            x[i]=x[i]/A[i][i];
+            if(abs(x[i]-y)<=epsilon)
+                flag++;
+            cout<<"|"<<x[i]<<"|";
+        }
+        cout<<endl;
+        count++;
+
+    }while(flag<dim);
+    cout<<"La solucion es la sig"<<endl;
+    for(i=0;i<dim;i++)
+        cout<<"x"<<i+1<<": "<<x[i]<<endl;
+}
 int main(){
     cout<<"Metodos numericos: "<<endl;
     //main_biseccion_falsaposicion();
     //main_newton();
     //main_gauss_lab4();
-    main_LU();
+    //main_LU();
     //main_jacobi();
+    main_gauss_seidel();
     archivo.close();
     return 0;
     }
