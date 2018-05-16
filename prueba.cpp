@@ -267,7 +267,7 @@ void main_newton(){
 
 /*Gauss-lab4*/
 
-#define n 4
+#define n 2
 
 void imprimir(double A[n][n+1]){
     for(int i=0;i<n;i++){
@@ -357,22 +357,26 @@ double b[n];
 double x[n];
 double y[n];
 
-void permutar(double A[n][n]){
-    int fmay;double may;double paso;
-    for(int i=0;i<=n;i++){
+void permutar(double A[n][n],double b[n]){
+    int fmay;double may;double paso;double temp;
+    for(int i=0;i<n;i++){
         may=abs(A[i][i]);
         fmay=i;
-        for(int j=i;j<=n;j++){
+        for(int j=i;j<n;j++){
             if(abs(A[j][i])>may){
                 may=abs(A[j][i]);
                 fmay=j;
             }
         }
-        for(int k=0;k<=n;k++){
+        for(int k=0;k<n;k++){
             paso=A[i][k];
             A[i][k]=A[fmay][k];
             A[fmay][k]=paso;
+            temp=b[i];
+            b[i]=b[fmay];
+            b[fmay]=temp;
         }
+
 
     
 }}
@@ -503,7 +507,7 @@ void ResuelveSistConLU(double A[n][n],double b[n],double L[n][n],double U[n][n])
     cout<<"MATRIZ A"<<endl;
     imprimir(A);
     cout<<"Matriz A permutada"<<endl;
-    permutar(A);
+    permutar(A,b);
     imprimir(A);
     descomp_LU(A);
     if(desc(U)){
@@ -536,57 +540,65 @@ float suma_jacobi(float Matriz[], float vector[], int componente);
 int main_jacobi(){
     int i,j,iteraciones=0;
     float error,epsilon;
-    printf("\n METODO DE JACOBI DE RESOLUCION DE SISTEMAS Ax=b \n");
+    cout<<"METODO DE JACOBI DE RESOLUCION DE SISTEMAS Ax=b "<<endl;
 
-    printf("Dimension de la matriz A: ");
-    scanf("%d",&dim);
+    cout<<"Dimension de la matriz A: ";
+    cin>>dim;
     float A[dim][dim],b[dim],x[dim],x_prev[dim],aux[dim];
 
-    printf("\n Elementos de la matriz A: \n");
+    cout<<endl<<" Elementos de la matriz A: "<<endl;
     for(i=0;i<dim;i++) for(j=0;j<dim;j++){
-        printf("A(%d,%d)=",i,j); scanf("%f",&A[i][j]);
+        cout<<"A("<<i<<","<<j<<")"; cin>>A[i][j]; cout<<endl;
     }
 
-    printf("\n Elementos del vector b: \n");
+    cout<<" Elementos del vector b: "<<endl;
     for(i=0;i<dim;i++){
-        printf("b(%d)=",i); scanf("%f",&b[i]);
+        cout<<"b("<<i<<")="; cin>>b[i];
     }
 
-    printf("\n Error de parada: \n");
-    printf("E=",i); scanf("%f",&epsilon);
+    cout<<"\n Error de parada: \n";
+    cout<<"E= "; cin>>epsilon;
     error=epsilon+1;
 
     //cominezo algoritmo de Jacobi
     //Error se mide como la norma del vector diferenceia entre la iteracion i e i+1
-    printf("\n Valor inicail de la iteracion: \n");
+    cout<<"\n Valor inicial de la iteracion: "<<endl;
     for(i=0;i<dim;i++){
-        printf("x0(%d)=",i); scanf("%f",&x_prev[i]);
+        cout<<"x0("<<i<<")="; cin>>x_prev[i];
     }
     while (error>epsilon){
         for(i=0;i<dim;i++){
-            for(j=0;j<dim;j++) aux[j]=A[i][j];
-            x[i]=(1/A[i][i])*(b[i]-suma_jacobi(aux,x_prev,i));
+            for(j=0;j<dim;j++) 
+                aux[j]=A[i][j];//copia la fila a trabajar
+                x[i]=(1/A[i][i])*(b[i]-suma_jacobi(aux,x_prev,i));
         }
         error=norma(x,x_prev);
 
-        printf("\n\n Iteracion %d: \n",iteraciones);
+        cout<<"\n\n Iteracion"<<iteraciones<<endl;
         for(i=0;i<dim;i++){
             x_prev[i]=x[i];
-            printf("X(%d)=%f \n",i,x[i]);
+            cout<<"X("<<i<<")="<<x[i]<<endl;
         }
 
         iteraciones++;
         if (iteraciones==10) error=epsilon-1;
     }
 
-    printf("Solucion del sistema\n");
-    printf("Numero de iteraciones: %d \n", iteraciones);
+    cout<<"Solucion del sistema"<<endl;
+    cout<<"Numero de iteraciones: "<<iteraciones<<endl;
     for(i=0;i<dim;i++){
-        printf("x(%d)=%f\n",i,x[i]);
+        cout<<"x("<<i<<")="<<x[i]<<endl;
     }
     return 1;
 }
+float norma2(float vector1[],float vector2[]){
+    float aux=0;
+    for(int i=0;i<dim;i++){
+        aux+=abs(vector1[i]-vector2[i]);
+    }
+    return aux/3;
 
+}    
 float norma(float vector1[],float vector2[]){
     float aux=0;
     int i;
@@ -611,12 +623,12 @@ float suma_jacobi(float Matriz[], float vector[], int componente)
 /*Gauss seidel*/
 
 int main(){
-
+    cout<<"Metodos numericos: "<<endl;
     //main_biseccion_falsaposicion();
     //main_newton();
     //main_gauss_lab4();
-    //main_LU();
-    main_jacobi();
+    main_LU();
+    //main_jacobi();
     archivo.close();
     return 0;
     }
