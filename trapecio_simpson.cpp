@@ -15,7 +15,7 @@ double f2(double x)
 }
 double f(double x)
 {
-    return sin(x);
+    return sin(x*x);
     //integral sen(x)dx de [0,1] = 1
 }
 double Trapecio(double a,double b,double( *f)(double),int n)
@@ -135,14 +135,14 @@ double Simpson38(double a,double b,double (*f)(double),int n)
 void viewTable(int n,double &a,double &b)
 {
     cout<<endl;
-    cout<<"Funcion: sen(x)"<<endl;
+    cout<<"Funcion: sen(x*x)"<<endl;
     cout<<"Intervalo: "<<"["<<a<<";"<<b<<"]";
     cout<<endl;
     cout<<"\n";
     cout<<" n"<<'\t'<<"Trapecio"<<'\t'<<"Simpson 1/3"<<'\t'<<"Simpson 3/8"<<endl;
     cout<<"\n";
     cout<<"-------------------------------------------------------------"<<endl;
-    for(int i=6;i<193;i=i*2)
+    for(int i=6;i<2176782336;i=i*2)
     {
         cout<<" "<<i<<"\t"<<Trapecio(a,b,f,i)<<"     \t"<<Simpson13(a,b,f,i)<<"    \t"<<Simpson38(a,b,f,i)<<endl;
         //cout<<i<<" ";
@@ -151,7 +151,7 @@ void viewTable(int n,double &a,double &b)
 int main()
 {
     double a=0;
-    double b=pipi/2;
+    double b=1;
     int n=6;
     cout<<"\n  Tabla de Comparacion entre las Reglas de: \n"<<endl;
     cout<<".........................................................."<<endl;
